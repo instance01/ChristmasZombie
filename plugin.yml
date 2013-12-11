@@ -1,11 +1,17 @@
-name: Weihnachtszombie
-main: com.comze_instancelabs.zombie.Main
-version: 1.0
+name: ChristmasMobs
+main: com.comze_instancelabs.christmasmobs.Main
+version: 1.0.1
 author: instancelabs
 commands:
    spawnzombie:
-      description: Main command
+      description: Spawn a christmas Zombie
       usage: /spawnzombie [name]
    removezombie:
-      description: Main command
-      usage: /removezombie [name]
+      description: Remove a christmas Zombie
+      usage: /removezombie
+   spawnskeleton:
+      description: Spawn a christmas skeleton
+      usage: /spawnskeleton [name]
+   removeskeleton:
+      description: Remove a christmas skeleton
+      usage: /removeskeleton
