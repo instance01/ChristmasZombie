@@ -56,7 +56,8 @@ public class Main extends JavaPlugin implements Listener {
 		CustomEntityType.registerEntities();
 		
 		// load all registered skeletons/zombies
-		
+		loadAllZombies();
+		loadAllSkeletons();
 	}
 	
 	@Override
@@ -244,7 +245,7 @@ public class Main extends JavaPlugin implements Listener {
     	for(Zombie z : zombies){
     		//String num = Integer.toString(r.nextInt());
     		String num = Integer.toString(z.getEntityId());
-    		getConfig().set("entites.zombies.zombie" + num + ".id", z.getEntityId());
+    		getConfig().set("entities.zombies.zombie" + num + ".id", z.getEntityId());
     		getConfig().set("entities.zombies.zombie" + num + ".x", z.getLocation().getBlockX());
     		getConfig().set("entities.zombies.zombie" + num + ".y", z.getLocation().getBlockY());
     		getConfig().set("entities.zombies.zombie" + num + ".z", z.getLocation().getBlockZ());
@@ -254,20 +255,28 @@ public class Main extends JavaPlugin implements Listener {
     }
     
     public void loadAllZombies(){
-		for(String z : getConfig().getConfigurationSection("entities.zombies").getKeys(false)){
-			Location zl = new Location(Bukkit.getWorld(getConfig().getString("entities.zombies." + z + ".world")), getConfig().getInt("entities.zombies." + z + ".x"), getConfig().getInt("entities.zombies." + z + ".y"), getConfig().getInt("entities.zombies." + z + ".z"));
-			int id = getConfig().getInt("entities.zombies." + z + ".id");
-			
-			//TODO get them zombies and add to zombies-arraylist
-			
-		}
+    	if(getConfig().isSet("entities.zombies")){
+	    	for(String z : getConfig().getConfigurationSection("entities.zombies").getKeys(false)){
+				Location zl = new Location(Bukkit.getWorld(getConfig().getString("entities.zombies." + z + ".world")), getConfig().getInt("entities.zombies." + z + ".x"), getConfig().getInt("entities.zombies." + z + ".y"), getConfig().getInt("entities.zombies." + z + ".z"));
+				int id = getConfig().getInt("entities.zombies." + z + ".id");
+				
+				for(Zombie z_ :  zl.getWorld().getEntitiesByClass(Zombie.class)){
+					if(z_.getEntityId() == id){
+						zombies.add(z_);
+					}else{
+						getConfig().set("entities.zombies." + z, null);
+					}
+				}
+			}
+	    	this.saveConfig();
+    	}
     }
 	
     public void saveAllSkeletons(){
     	for(Skeleton s : skeletons){
     		//String num = Integer.toString(r.nextInt());
     		String num = Integer.toString(s.getEntityId());
-    		getConfig().set("entites.skeletons.skeleton" + num + ".id", s.getEntityId());
+    		getConfig().set("entities.skeletons.skeleton" + num + ".id", s.getEntityId());
     		getConfig().set("entities.skeletons.skeleton" + num + ".x", s.getLocation().getBlockX());
     		getConfig().set("entities.skeletons.skeleton" + num + ".y", s.getLocation().getBlockY());
     		getConfig().set("entities.skeletons.skeleton" + num + ".z", s.getLocation().getBlockZ());
@@ -277,10 +286,20 @@ public class Main extends JavaPlugin implements Listener {
     }
     
     public void loadAllSkeletons(){
-		for(String s : getConfig().getConfigurationSection("entities.skeletons").getKeys(false)){
-			Location sl = new Location(Bukkit.getWorld(getConfig().getString("entities.skeletons." + s + ".world")), getConfig().getInt("entities.skeletons." + s + ".x"), getConfig().getInt("entities.skeletons." + s + ".y"), getConfig().getInt("entities.skeletons." + s + ".z"));
-			
-			//TODO get them skeletons and add to skeletons-arraylist
-		}
+    	if(getConfig().isSet("entities.skeletons")){
+	    	for(String s : getConfig().getConfigurationSection("entities.skeletons").getKeys(false)){
+				Location sl = new Location(Bukkit.getWorld(getConfig().getString("entities.skeletons." + s + ".world")), getConfig().getInt("entities.skeletons." + s + ".x"), getConfig().getInt("entities.skeletons." + s + ".y"), getConfig().getInt("entities.skeletons." + s + ".z"));
+				int id = getConfig().getInt("entities.skeletons." + s + ".id");
+	
+				for(Skeleton s_ :  sl.getWorld().getEntitiesByClass(Skeleton.class)){
+					if(s_.getEntityId() == id){
+						skeletons.add(s_);
+					}else{
+						getConfig().set("entities.skeletons." + s, null);
+					}
+				}
+			}
+	    	this.saveConfig();
+    	}
     }
 }
