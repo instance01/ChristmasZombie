@@ -34,6 +34,14 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
 
+/**
+ * 
+ * @author InstanceLabs
+ *
+ */
+
+// Critical bug: created zombies die after reload
+
 public class Main extends JavaPlugin implements Listener {
 
 	Random r = new Random(10000);
@@ -46,6 +54,15 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		CustomEntityType.registerEntities();
+		
+		// load all registered skeletons/zombies
+		
+	}
+	
+	@Override
+	public void onDisable(){
+		saveAllZombies();
+		saveAllSkeletons();
 	}
 	
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
@@ -143,6 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 	    			for(Entity e : p.getNearbyEntities(2, 2, 2)){
 	    				if(e instanceof Zombie){
 	    					e.remove();
+	    					zombies.remove((Zombie)e);
 	    				}
 	    			}
 	    		}
@@ -155,6 +173,7 @@ public class Main extends JavaPlugin implements Listener {
 	    			for(Entity e : p.getNearbyEntities(2, 2, 2)){
 	    				if(e instanceof Skeleton){
 	    					e.remove();
+	    					skeletons.remove((Skeleton)e);
 	    				}
 	    			}
 	    		}
@@ -170,17 +189,20 @@ public class Main extends JavaPlugin implements Listener {
         Player p = event.getPlayer();
      
         if(event.getRightClicked().getType() == EntityType.ZOMBIE){
-            String PlayerName = p.getName();
-         
-            Potion potion = new Potion(PotionType.STRENGTH, 1, false);
-            ItemStack potionstack = potion.toItemStack(1);
-            
-            ItemMeta itemMeta = potionstack.getItemMeta();
-            itemMeta.setDisplayName("§6Glühwein");
-            potionstack.setItemMeta(itemMeta);
-            
-            p.sendMessage(ChatColor.RED + "Merry Christmas! =)");
-            p.getInventory().addItem(potionstack);
+        	Zombie z = (Zombie) event.getRightClicked();
+        	if(zombies.contains(z)){
+	        	String PlayerName = p.getName();
+	         
+	            Potion potion = new Potion(PotionType.STRENGTH, 1, false);
+	            ItemStack potionstack = potion.toItemStack(1);
+	            
+	            ItemMeta itemMeta = potionstack.getItemMeta();
+	            itemMeta.setDisplayName("§6Glühwein");
+	            potionstack.setItemMeta(itemMeta);
+	            
+	            p.sendMessage(ChatColor.RED + "Merry Christmas! =)");
+	            p.getInventory().addItem(potionstack);	
+        	}
         }
     }
     
@@ -220,7 +242,9 @@ public class Main extends JavaPlugin implements Listener {
     
     public void saveAllZombies(){
     	for(Zombie z : zombies){
-    		String num = Integer.toString(r.nextInt());
+    		//String num = Integer.toString(r.nextInt());
+    		String num = Integer.toString(z.getEntityId());
+    		getConfig().set("entites.zombies.zombie" + num + ".id", z.getEntityId());
     		getConfig().set("entities.zombies.zombie" + num + ".x", z.getLocation().getBlockX());
     		getConfig().set("entities.zombies.zombie" + num + ".y", z.getLocation().getBlockY());
     		getConfig().set("entities.zombies.zombie" + num + ".z", z.getLocation().getBlockZ());
@@ -232,18 +256,22 @@ public class Main extends JavaPlugin implements Listener {
     public void loadAllZombies(){
 		for(String z : getConfig().getConfigurationSection("entities.zombies").getKeys(false)){
 			Location zl = new Location(Bukkit.getWorld(getConfig().getString("entities.zombies." + z + ".world")), getConfig().getInt("entities.zombies." + z + ".x"), getConfig().getInt("entities.zombies." + z + ".y"), getConfig().getInt("entities.zombies." + z + ".z"));
+			int id = getConfig().getInt("entities.zombies." + z + ".id");
 			
 			//TODO get them zombies and add to zombies-arraylist
+			
 		}
     }
 	
     public void saveAllSkeletons(){
-    	for(Zombie z : zombies){
-    		String num = Integer.toString(r.nextInt());
-    		getConfig().set("entities.skeletons.skeleton" + num + ".x", z.getLocation().getBlockX());
-    		getConfig().set("entities.skeletons.skeleton" + num + ".y", z.getLocation().getBlockY());
-    		getConfig().set("entities.skeletons.skeleton" + num + ".z", z.getLocation().getBlockZ());
-    		getConfig().set("entities.skeletons.skeleton" + num + ".world", z.getLocation().getWorld().getName());
+    	for(Skeleton s : skeletons){
+    		//String num = Integer.toString(r.nextInt());
+    		String num = Integer.toString(s.getEntityId());
+    		getConfig().set("entites.skeletons.skeleton" + num + ".id", s.getEntityId());
+    		getConfig().set("entities.skeletons.skeleton" + num + ".x", s.getLocation().getBlockX());
+    		getConfig().set("entities.skeletons.skeleton" + num + ".y", s.getLocation().getBlockY());
+    		getConfig().set("entities.skeletons.skeleton" + num + ".z", s.getLocation().getBlockZ());
+    		getConfig().set("entities.skeletons.skeleton" + num + ".world", s.getLocation().getWorld().getName());
     	}
     	this.saveConfig();
     }
