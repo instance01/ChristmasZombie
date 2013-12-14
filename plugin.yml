@@ -3,6 +3,9 @@ main: com.comze_instancelabs.christmasmobs.Main
 version: 1.0.1
 author: instancelabs
 commands:
+   spawnplayer:
+      description: Spawn a christmas Player
+      usage: /spawnplayer [name]
    spawnzombie:
       description: Spawn a christmas Zombie
       usage: /spawnzombie [name]

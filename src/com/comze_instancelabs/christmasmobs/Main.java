@@ -180,6 +180,10 @@ public class Main extends JavaPlugin implements Listener {
 	    		}
 	    		return true;	
     		}
+    	}else if(cmd.getName().equalsIgnoreCase("spawnplayer")){
+    		if(sender instanceof Player){
+	    		Player p = (Player)sender;
+    		}
     	}
     	return false;
     }

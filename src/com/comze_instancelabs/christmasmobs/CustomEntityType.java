@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.server.v1_7_R1.BiomeBase;
 import net.minecraft.server.v1_7_R1.BiomeMeta;
 import net.minecraft.server.v1_7_R1.EntityInsentient;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
 import net.minecraft.server.v1_7_R1.EntitySkeleton;
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.EntityZombie;
@@ -16,8 +17,10 @@ import org.bukkit.entity.EntityType;
 public enum CustomEntityType {
 
 	ZOMBIE("Christmas Zombie", 54, EntityType.ZOMBIE, EntityZombie.class, CustomEntityZombie.class),
-	SKELETON("Christmas Skeleton", 54, EntityType.SKELETON, EntitySkeleton.class, CustomEntitySkeleton.class);
+	SKELETON("Christmas Skeleton", 51, EntityType.SKELETON, EntitySkeleton.class, CustomEntitySkeleton.class);
+	//PLAYER("Christmas Player", null, EntityType.PLAYER, EntityPlayer.class, CustomEntityPlayer.class);
 
+	
 	private String name;
 	private int id;
 	private EntityType entityType;
